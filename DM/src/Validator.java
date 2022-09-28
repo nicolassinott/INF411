@@ -22,6 +22,30 @@ public class Validator {
 
 	boolean isfree(int addr, int size) {
 		// TODO
-		return false;
+		
+		// On vérifie si le [addr,addr+size) est inclus en [0,N)
+		
+		if(addr < 0 && addr + size >= this.N){
+			return false;
+		}
+
+		Integer start_floor = this.startpoints.floor(addr + size);
+		Integer end_floor = this.endpoints.floor(addr + size);
+
+		if(start_floor == null){
+			return true;
+		}
+
+		if(start_floor >= addr){
+			return false;
+		} else {
+			if(end_floor == null || end_floor > addr){
+				return false;
+			}
+		}
+
+		return true;
+		
+		// TODO
 	}
 }
