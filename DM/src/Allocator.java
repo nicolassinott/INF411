@@ -14,7 +14,12 @@ public class Allocator {
 
 	static int buddy(int addr, int k) {
 		// TODO
-		return 0;
+		if(addr % Math.pow(2, k) == 0){
+			return addr - Math.pow(2, k);
+		} else {
+			return addr + Math.pow(2, k);
+		}
+		// TODO
 	}
 
 	int reserve(int k) {

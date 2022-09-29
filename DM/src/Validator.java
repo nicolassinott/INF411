@@ -21,9 +21,9 @@ public class Validator {
 	}
 
 	boolean isfree(int addr, int size) {
-		// TODO
+		// TODO (to test)
 		
-		// On vérifie si le [addr,addr+size) est inclus en [0,N)
+		// On verifie si le [addr,addr+size) est inclus en [0,N)
 		
 		if(addr < 0 && addr + size >= this.N){
 			return false;
