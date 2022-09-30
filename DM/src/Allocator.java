@@ -14,10 +14,10 @@ public class Allocator {
 
 	static int buddy(int addr, int k) {
 		// TODO
-		if(addr % Math.pow(2, k) == 0){
-			return addr - Math.pow(2, k);
+		if(addr % (1 << k) == 0){
+			return addr - (1 << k);
 		} else {
-			return addr + Math.pow(2, k);
+			return addr + (1 << k);
 		}
 		// TODO
 	}
