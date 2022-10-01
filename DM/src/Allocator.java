@@ -42,7 +42,16 @@ public class Allocator {
 
 	static int buddy(int addr, int k) {
 		// TODO
-		if(addr % (1 << k) == 1){
+
+		// if(k == 0){
+		// 	if(addr % 2 == 1){
+		// 		return addr - 1;
+		// 	} else {
+		// 		return addr + 1;
+		// 	}
+		// }
+
+		if((addr / (1 << k)) % 2 == 1){
 			return addr - (1 << k);
 		} else {
 			return addr + (1 << k);
@@ -118,16 +127,177 @@ public class Allocator {
 	public void free(int addr, int size) {
 		// TODO
 
+		//partir du addr et apres monter prenant le plus petit element
+		//du paire compagnon
 
+		//attention que addr + taille peut etre n'importe quel format
+
+		// for(int i = addr; i < addr + size; i++){
+
+		// 	if(this.freeblocks.get(this.maxk).contains(0)){
+		// 		return;
+		// 	}
+
+		// 	int k0 = 0;
+			
+		// 	if(this.freeblocks.get(k0).contains(buddy(i, k0))){
+		// 		this.freeblocks.get(k0).remove(buddy(i, k0));
+		// 		int k2 = k0;
+		// 		int bloc_index = Math.min(i, buddy(i, k0));
+			
+		// 		while(true){
+		// 			if(k0 == this.maxk){
+		// 				this.freeblocks.get(k2).add(0);
+		// 				break;
+		// 			}
+
+		// 			if(this.freeblocks.get(k2+1).contains(buddy(bloc_index, k2+1))){
+		// 				this.freeblocks.get(k2+1).remove(buddy(bloc_index, k2+1));
+		// 				bloc_index = Math.min(bloc_index, buddy(bloc_index, k2+1));
+		// 				k2++;
+		// 			} else {
+		// 				if(k2 + 1 == this.maxk){
+		// 					this.freeblocks.get(k2+1).add(0);
+		// 					break;
+		// 				}
+		// 				this.freeblocks.get(k2).add(bloc_index);
+		// 				break;
+		// 			}
+		// 		}
+		// 		i = Math.max(i, buddy(i, k0));
+
+		// 	} else {
+		// 		int k2 = this.maxk - 1;
+		// 		boolean b = true;
+
+		// 		while(k2 != 0){
+		// 			System.out.println("!!!!!");
+		// 			for(int j : this.freeblocks.get(k2)){
+						
+		// 				if(i >= j && i + 1 <= j + (1 << k2)){
+		// 					System.out.println("?");
+		// 					b = false;
+		// 					break;
+		// 				}
+		// 			}
+		// 			k2--;
+		// 		}
+
+		// 		if(b && k2 == 0){
+		// 			System.out.println("!!!!!!!!!!!!!!!!!!!!");
+		// 			this.freeblocks.get(k0).add(i);
+		// 		}
+
+		// 		i = Math.max(i, buddy(i, k0));
+		// 	}
+			
+			
+
+			
+
+		// for(int k =0; k < this.maxk; k++){
+		// 	for(int i : this.freeblocks.get(k)){
+		// 		if((buddy(i,k) >= addr) || (buddy(i,k) + (1 << k) <= addr + size)){
+		// 			int bloc_right = Math.max(buddy(i,k), addr);
+		// 			int bloc_left = Math.min(buddy(i,k) + (1 << k), addr + size);
+
+		// 		}
+		// 	}
+		// }
+
+
+		// update the freeblocks
+
+		// if(this.freeblocks.get(this.maxk).contains(0)){
+		// 	return;
+		// }
+
+		// Vector<HashSet<Integer>> blockedblocks = new Vector<HashSet<Integer>>();
+
+		// int k = this.maxk;
+
+		// while(k !=0 ){
+		// 	HashSet<Integer> set_of_addr = new HashSet<Integer>();
+
+		// for(int i = 0; i<size; i++){
+		// 	HashSet<Integer> set_of_addr = new HashSet<Integer>();
+		// 	blockedblocks.add(set_of_addr);
+		// }
+
+		//HashSet<Integer> set_of_addr = new HashSet<Integer>();
+		//set_of_addr.add(0);
+
+		// this.freeblocks.add(set_of_addr);
+		// int k = this.maxk;
+
+		// while(size != 1){
+		// 	HashSet<Integer> set_of_addr = new HashSet<Integer>();
+		// 	int number_of_addr = this.size / size;
+			
+		// 	for(int i = 0; i < number_of_addr ; i++){
+		// 		set_of_addr.add((Integer)(i*size));
+		// 	}
+
+		// 	this.freeblocks.add(set_of_addr);
+
+		// 	size-- ;
+		// }
+
+
+		for(int k = 0; k < this.maxk; k++){
+			for(int i : this.freeblocks.get(k)){
+				if((buddy(i,k) >= addr) && (buddy(i,k) + (1 << k) <= addr + size)){
+					this.freeblocks.get(k).remove(i);
+
+					// okay the neigh work, but now must update the ones above
+					int k0 = k;
+					int bloc_index = Math.min(i, buddy(i, k0));
+					while(true){
+						//int bloc_index = Math.min(i, buddy(i, k0));
+						if(k0 == this.maxk){
+							//System.out.println("??");
+							this.freeblocks.get(k0).add(0);
+							break;
+						}
+
+						if(this.freeblocks.get(k0+1).contains(buddy(bloc_index, k0+1))){
+							this.freeblocks.get(k0+1).remove(buddy(bloc_index, k0+1));
+							
+							bloc_index = Math.min(bloc_index, buddy(bloc_index, k0+1));
+							k0++;
+						} else {
+							if(k0 + 1 == this.maxk){
+								this.freeblocks.get(k0+1).add(0);
+								break;
+							}
+							this.freeblocks.get(k0).add(bloc_index);
+							break;
+						}
+
+					}
+				}
+			}
+		}
 
 		// TODO
 	}
 
+
 	public static void main(String[] args) {
-		Allocator a = new Allocator(4);
+		//Allocator a = new Allocator(4);
+		//System.out.println(buddy(1,0));
 		
+		//System.out.println(a.freeblocks.get(3));
 		//a.reserve(2);
 		//System.out.println(a.freeblocks.get(2));
+		//a.free(0,4);
+		//System.out.println(a.freeblocks.get(4));
+
+		// for(int i : a.freeblocks.get(2)){
+		// 	System.out.println(i);
+		// }
+
+		//System.out.println(a.freeblocks.get(3));
 		//System.out.println(a.freeblocks.get(3));
 		//System.out.println(a.freeblocks.get(2).isEmpty());
 		//reserve et buddy seems okay
@@ -139,6 +309,16 @@ public class Allocator {
 		//System.out.println(a.freeblocks.get(2).isEmpty());
 		//alloc seems okay
 
+
+
+		Allocator a = new Allocator(4);
+		a.reserve(1);
+		a.reserve(0);
+		System.out.println(a.freeblocks.get(2));
+		//a.free(0, 10);
+		
+		a.free(0,3);
+		System.out.println(a.freeblocks.get(0));
 
 	}
 }
