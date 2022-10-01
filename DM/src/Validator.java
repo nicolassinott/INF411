@@ -29,7 +29,7 @@ public class Validator {
 			return false;
 		}
 
-		Integer start_floor = this.startpoints.floor(addr + size);
+		Integer start_floor = this.startpoints.floor(addr + size - 1);
 		Integer end_floor = this.endpoints.floor(addr + size);
 
 		if(start_floor == null){
@@ -47,5 +47,19 @@ public class Validator {
 		return true;
 		
 		// TODO
+	}
+
+	public static void main(String[] args) {
+		Validator a = new Validator(128*128);
+		a.alloc(0, 1);
+		a.alloc(1, 1);
+		a.alloc(16, 12);
+		a.alloc(2, 1);
+		a.alloc(4, 4);
+		//a.alloc(8, 2);
+		//a.alloc(3, 1);
+		System.out.println(a.isfree(3, 1));
+		
+	
 	}
 }
